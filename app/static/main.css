@@ -1,0 +1,27 @@
+body{
+    width: 100%;
+    background-color: bisque;
+}
+nav{
+    margin-bottom: 30px;
+}
+
+.area1{
+    margin-top: 400px;
+    width: 70%;
+    height: 150px;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    
+}
+.area1s{
+    width: 50%;
+    height: 100%;
+}
+.area11{
+    background-color: orange;
+}
+.area12{
+    background-color: gray;
+}
