@@ -10,9 +10,19 @@ WheelSpend | Home
 
 
 
-{% block content %}
+{% block area11 %}
     
-<h1>Hello!!</h1>
+{% for key,value in form_data.items() %}
+<h2> {{key}}</h2>
+<p> {{value}}</p>
+{% endfor %}
 
 
-{% endblock content %}
+{% endblock area11 %}
+
+{% block area12 %}
+{% for key,value in form_data.items() %}
+<h2> {{key}}</h2>
+<p> {{value}}</p>
+{% endfor %}
+{% endblock area12 %}
