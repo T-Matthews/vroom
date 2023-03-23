@@ -22,6 +22,18 @@ WheelSpend | Welcome
 {% endblock area11 %}
 
 {% block area12 %}
+    
+
+        <h3>Vehicle Name:</h3>
+        <form action="{{url_for('home')}}" method = "POST">
+            <p>Name <input type = "text" name = "Name" /></p>
+            <p>City <input type = "text" name = "City" /></p>
+            <p>Country <input type = "text" name = "Country" /></p>
+            <p><input type = "submit" value = "Submit" /></p>
+        </form>
+{% endblock area12 %}
+
+{% block area21 %}
 
 
         <h3>Vehicle Name:</h3>
@@ -30,7 +42,18 @@ WheelSpend | Welcome
         <h3>{{ country }}</h3> 
 
 
-{% endblock area12 %}
+{% endblock area21 %}
+
+{% block area22 %}
+
+
+        <h3>Vehicle Name:</h3>
+        <h3>{{ name }}</h3>
+        <h3>{{ city }}</h3>
+        <h3>{{ country }}</h3> 
+
+
+{% endblock area22 %}
 
 
 </div>

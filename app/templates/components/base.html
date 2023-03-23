@@ -43,19 +43,32 @@
     </form>
   </div>
 </nav>
-<div class="area1">
-  <div class="area1s area11">
-    {% block area11 %}
+<div class="content_area">
+  <div class="area area1">
+    <div class="areas area1l areal">
+      {% block area11 %}
 
-    {% endblock area11 %}
+      {% endblock area11 %}
+    </div>
+
+    <div class="areas area1r arear">
+      {% block area12 %}
+
+      {% endblock area12 %}      
+    </div>
   </div>
-
-  <div class="area1s area12">
-    {% block area12 %}
-
-    {% endblock area12 %}
-        
-  </div>
+  <div class="area area2 ">
+    <div class="areas area2l areal">
+      {% block area21 %}
+  
+      {% endblock area21 %}
+    </div>
+  
+    <div class="areas area2r arear">
+      {% block area22 %}
+  
+      {% endblock area22 %}      
+    </div>
 </div>
     {% block content %}
 

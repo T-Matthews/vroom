@@ -6,22 +6,24 @@ nav{
     margin-bottom: 30px;
 }
 
-.area1{
+.area{
     margin-top: 400px;
     width: 70%;
-    height: 150px;
+    height: auto;
     margin: auto;
     display: flex;
     flex-direction: row;
     
 }
-.area1s{
+
+.areas{
     width: 50%;
     height: 100%;
+    margin: 10px;
 }
-.area11{
+.areal{
     background-color: orange;
 }
-.area12{
+.arear{
     background-color: gray;
 }

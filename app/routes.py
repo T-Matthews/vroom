@@ -24,7 +24,7 @@ def cars():
         country = request.form.get('Country')
         print(type(name), type(city), type(country))
         form_data = request.form
-        return render_template('cars.html',form_data=form_data)
+        return render_template('index.html',name=name)
 
     return render_template('index.html')
 
