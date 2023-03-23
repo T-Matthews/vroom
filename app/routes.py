@@ -7,8 +7,23 @@ from flask import render_template,request
 
 @app.route('/',methods = ['POST', 'GET'])
 def home():
-    form_data = request.form
-    return render_template('index.html',form_data=form_data)
+    if request.method == "POST":
+       # getting input with name = fname in HTML form
+        name = request.form.get("Name")
+       
+        city = request.form.get("City")
+        country = request.form.get('Country')
+        print(type(name), type(city), type(country))
+        form_data = {
+             'city':city,
+             'name':name,
+             'country':country
+        }
+        print(name)
+        return render_template('index.html', form_data=form_data)
+    return render_template('index.html',form_data = {'city':"",
+                                                     'name':"",
+                                                     'country':""})
 
 @app.route('/about')
 def about():
@@ -16,17 +31,7 @@ def about():
 
 @app.route('/cars',methods = ['POST', 'GET'])
 def cars():
-    if request.method == "POST":
-       # getting input with name = fname in HTML form
-        name = request.form.get("name")
-       
-        city = request.form.get("City")
-        country = request.form.get('Country')
-        print(type(name), type(city), type(country))
-        form_data = request.form
-        return render_template('index.html',name=name)
-
-    return render_template('index.html')
+       return render_template('cars.html')
 
 
     # api_key = os.environ.get('API_KEY')

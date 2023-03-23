@@ -12,8 +12,8 @@ WheelSpend | Welcome
 {% block area11 %}
     
 
-        <h3>Vehicle Name:</h3>
-        <form action="{{url_for('cars')}}" method = "POST">
+        <h3>Gasoline Details:</h3>
+        <form action="{{url_for('home')}}" method = "POST">
             <p>Name <input type = "text" name = "Name" /></p>
             <p>City <input type = "text" name = "City" /></p>
             <p>Country <input type = "text" name = "Country" /></p>
@@ -24,7 +24,7 @@ WheelSpend | Welcome
 {% block area12 %}
     
 
-        <h3>Vehicle Name:</h3>
+        <h3>EV Details:</h3>
         <form action="{{url_for('home')}}" method = "POST">
             <p>Name <input type = "text" name = "Name" /></p>
             <p>City <input type = "text" name = "City" /></p>
@@ -33,28 +33,29 @@ WheelSpend | Welcome
         </form>
 {% endblock area12 %}
 
+
 {% block area21 %}
 
 
-        <h3>Vehicle Name:</h3>
-        <h3>{{ name }}</h3>
-        <h3>{{ city }}</h3>
-        <h3>{{ country }}</h3> 
+        <h3>Gasoline Car</h3>
+        <h3>{{ form_data.name }}</h3>
+        <h3>{{ form_data.city }}</h3>
+        <h3>{{ form_data.country }}</h3> 
 
 
 {% endblock area21 %}
 
 {% block area22 %}
+    {% if form_data.city|length %}
 
-
-        <h3>Vehicle Name:</h3>
-        <h3>{{ name }}</h3>
-        <h3>{{ city }}</h3>
-        <h3>{{ country }}</h3> 
+    <h3>EV</h3>
+    <h3>{{ form_data.name }}</h3>
+    <h3>{{ form_data.city }}</h3>
+    <h3>{{ form_data.country }}</h3> 
+    {% endif %}
 
 
 {% endblock area22 %}
-
 
 </div>
 
