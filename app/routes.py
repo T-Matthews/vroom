@@ -1,29 +1,36 @@
 from app import app
 import requests
 import os
+from app.services import CarForm,initial
+
 
 
 from flask import render_template,request
 
+
+
 @app.route('/',methods = ['POST', 'GET'])
 def home():
-    if request.method == "POST":
-       # getting input with name = fname in HTML form
-        name = request.form.get("Name")
-       
-        city = request.form.get("City")
-        country = request.form.get('Country')
-        print(type(name), type(city), type(country))
-        form_data = {
-             'city':city,
-             'name':name,
-             'country':country
-        }
-        print(name)
-        return render_template('index.html', form_data=form_data)
-    return render_template('index.html',form_data = {'city':"",
-                                                     'name':"",
-                                                     'country':""})
+    for x in initial:
+         x=None
+    form=CarForm()
+    if form.validate_on_submit():
+        print('VALID')
+        input_data={
+                        'make' : form.make.data,
+                        'model' : form.model.data,
+                        'msrp' : form.msrp.data,
+                        'fuel_type':form.fuel_type.data,
+                        'mpg' : form.mpg.data,
+                        'annual_milage':form.annual_milage.data,
+                        'zip_code':form.zip_code.data,
+                    }
+        for k,v in input_data.items():
+            print(k,v)
+    else:
+        print('FAILED')      
+    
+    return render_template('index.html',input_data=input_data,form=form)
 
 @app.route('/about')
 def about():

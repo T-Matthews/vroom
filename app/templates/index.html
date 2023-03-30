@@ -10,52 +10,88 @@ WheelSpend | Welcome
 
 
 {% block area11 %}
-    
 
-        <h3>Gasoline Details:</h3>
-        <form action="{{url_for('home')}}" method = "POST">
-            <p>Name <input type = "text" name = "Name" /></p>
-            <p>City <input type = "text" name = "City" /></p>
-            <p>Country <input type = "text" name = "Country" /></p>
-            <p><input type = "submit" value = "Submit" /></p>
+    {% if msrp %}
+        <h1>Make: {{ make }}</h1>
+        <h3>Model: {{ input_data.model }} </h3>
+        <h3>MSRP: {{ input_data.msrp }} </h3>
+        <h3>Fuel Type: {{ input_data.fuel_type }} </h3>
+        {% if input_data.fuel_type == 'EV' %}
+        <h3>eMPG: {{ input_data.mpg }} </h3>
+        {% else %}
+        <h3>MPG: {{ input_data.mpg }} </h3>
+        {% endif %}
+        <h3>Annual Milage: {{ input_data.annual_milage }} </h3>
+        <h3>ZIP Code: {{ input_data.zip_code }} </h3>
+
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <br/>
+            {{ form.make.label }}
+            {{ form.make() }}
+            <br/>
+            {{ form.model.label }}
+            {{ form.model() }}
+            <br/>
+            {{ form.msrp.label }}
+            {{ form.msrp(value=form.msrp.data) }}
+            <br/>
+            {{ form.fuel_type.label }}
+            {{ form.fuel_type() }}
+            <br/>
+            {{ form.mpg.label }}
+            <!-- Because using Integer field, must specify value in following -->
+            {{ form.mpg(value=form.mpg.data) }}
+            <br/>
+            {{ form.annual_milage.label }}
+            {{ form.annual_milage(value=form.annual_milage.data) }}
+            <br/>
+            {{ form.zip_code.label }}
+            {{ form.zip_code(value=form.zip_code.data) }}
+            <br/>
+
+            <br/>
+            {{ form.submit() }}
+
         </form>
+
+    {% else %}
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <br/>
+        {{ form.make.label }}
+        {{ form.make() }}
+        <br/>
+        {{ form.model.label }}
+        {{ form.model() }}
+        <br/>
+        {{ form.msrp.label }}
+        {{ form.msrp(value=form.msrp.data) }}
+        <br/>
+        {{ form.fuel_type.label }}
+        {{ form.fuel_type() }}
+        <br/>
+        {{ form.mpg.label }}
+        <!-- Because using Integer field, must specify value in following -->
+        {{ form.mpg(value=form.mpg.data) }}
+        <br/>
+        {{ form.annual_milage.label }}
+        {{ form.annual_milage(value=form.annual_milage.data) }}
+        <br/>
+        {{ form.zip_code.label }}
+        {{ form.zip_code(value=form.zip_code.data) }}
+        <br/>
+
+        <br/>
+        {{ form.submit() }}
+
+    </form>
+
+    {% endif %}
 {% endblock area11 %}
 
-{% block area12 %}
-    
 
-        <h3>EV Details:</h3>
-        <form action="{{url_for('home')}}" method = "POST">
-            <p>Name <input type = "text" name = "Name" /></p>
-            <p>City <input type = "text" name = "City" /></p>
-            <p>Country <input type = "text" name = "Country" /></p>
-            <p><input type = "submit" value = "Submit" /></p>
-        </form>
-{% endblock area12 %}
-
-
-{% block area21 %}
-
-
-        <h3>Gasoline Car</h3>
-        <h3>{{ form_data.name }}</h3>
-        <h3>{{ form_data.city }}</h3>
-        <h3>{{ form_data.country }}</h3> 
-
-
-{% endblock area21 %}
-
-{% block area22 %}
-    {% if form_data.city|length %}
-
-    <h3>EV</h3>
-    <h3>{{ form_data.name }}</h3>
-    <h3>{{ form_data.city }}</h3>
-    <h3>{{ form_data.country }}</h3> 
-    {% endif %}
-
-
-{% endblock area22 %}
 
 </div>
 

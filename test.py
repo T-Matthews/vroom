@@ -1,21 +1,73 @@
-import requests
+import requests,os
+
+from uszipcode import SearchEngine, SimpleZipcode
+
+search=SearchEngine()
+def zip_to_city(x):
+    search=SearchEngine()
+    city = search.by_zipcode(x).major_city
+    state=search.by_zipcode(x).state_abbr
+    if city and state:
+        return city,state
+    elif state:
+        return state
+    else:
+        return 'None'
 
 
+def getprices(x):
+    city,state=zip_to_city(x)
+    print(city,state)
+    import http.client
+    conn = http.client.HTTPSConnection("api.collectapi.com")
+    auth=os.environ.get('GAS_KEY')
+    print(auth)
+    headers = {
+        'content-type': "application/json",
+        'authorization': #GAS KEY HERE
+        }
+
+    conn.request("GET", f"/gasPrice/stateUsaPrice?state={state}", headers=headers)
+    res = conn.getresponse()
+    str_data = res.read().decode('utf-8')
+    success=False
+    if city in str_data:
+        str_data=str_data[34:str_data.index(city)]
+        diesel = float(str_data[-15:-10])
+        premium=float(str_data[-32:-27])
+        midgrade=float(str_data[-50:-45])
+        gasoline=float(str_data[-69:-64])
+        success=True
+    else:
+
+        str_data=str_data[:str_data.index('}')]
+
+        diesel = float(str_data[-6:-1])
+        premium=float(str_data[-23:-18])
+        midgrade=float(str_data[-41:-36])
+        gasoline=float(str_data[-60:-55])
+
+    print(diesel)
+    print(premium)
+    print(midgrade,type(midgrade))
+    print(gasoline,type(gasoline))
+    return(success,gasoline,midgrade,premium,diesel)
+getprices(91962)
 
 
-api_url = 'https://api.api-ninjas.com/v1/cars'
-car_data = {}
-included_makes = ['toyota']
-"""
+# api_url = 'https://api.api-ninjas.com/v1/cars'
+# car_data = {}
+# included_makes = ['toyota']
+# """
 
-,'honda','chevrolet','ford','mercedes_benz','jeep',
-                'bmw','porsche','subaru','nissan','cadillac','volkswagen',
-                'lexus','audi','ferrari','volvo','jaguar','gmc','buick',
-                'acura','bentley','dodge','hyundai','lincoln','mazda',
-                'land rover', 'tesla','ram_trucks','kia','chrysler',
-                'pontiac','infiniti','mitsubishi','oldsmobile','maserati',
-                'aston_martin','bugatti','fiat','mini','alfa_romeo','saab']
-"""
+# ,'honda','chevrolet','ford','mercedes_benz','jeep',
+#                 'bmw','porsche','subaru','nissan','cadillac','volkswagen',
+#                 'lexus','audi','ferrari','volvo','jaguar','gmc','buick',
+#                 'acura','bentley','dodge','hyundai','lincoln','mazda',
+#                 'land rover', 'tesla','ram_trucks','kia','chrysler',
+#                 'pontiac','infiniti','mitsubishi','oldsmobile','maserati',
+#                 'aston_martin','bugatti','fiat','mini','alfa_romeo','saab']
+# """
 # for x in included_makes:
 #     api_url = 'https://api.api-ninjas.com/v1/cars?make='+x
 #     new_data = requests.get(api_url, headers={'X-Api-Key': 'ilgqmSKRzBK90jvnTHceOg==vMoGd0XzjwCjSfDI'})
@@ -30,22 +82,22 @@ included_makes = ['toyota']
 # print(car_data)
 
 #same as car Data
-car_data1={'toyota': [{'city_mpg': 23, 'class': 'compact car', 'combination_mpg': 24, 'cylinders': 4, 'displacement': 1.6, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 26, 'make': 'toyota', 'model': 'corolla', 'transmission': 'a', 'year': 1993}, {'city_mpg': 23, 'class': 'compact car', 'combination_mpg': 26, 'cylinders': 4, 'displacement': 1.6, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 31, 'make': 'toyota', 'model': 'corolla', 'transmission': 'm', 'year': 1993}, {'city_mpg': 23, 'class': 'compact car', 'combination_mpg': 25, 'cylinders': 4, 'displacement': 1.8, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 30, 'make': 'toyota', 'model': 'corolla', 'transmission': 'a', 'year': 1993}, {'city_mpg': 23, 'class': 'compact car', 'combination_mpg': 26, 'cylinders': 4, 'displacement': 1.8, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 30, 'make': 'toyota', 'model': 'corolla', 'transmission': 'm', 'year': 1993}, {'city_mpg': 18, 'class': 'midsize car', 'combination_mpg': 21, 'cylinders': 4, 'displacement': 2.2, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 26, 'make': 'toyota', 'model': 'camry', 'transmission': 'a', 'year': 1993}]}
+# car_data1={'toyota': [{'city_mpg': 23, 'class': 'compact car', 'combination_mpg': 24, 'cylinders': 4, 'displacement': 1.6, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 26, 'make': 'toyota', 'model': 'corolla', 'transmission': 'a', 'year': 1993}, {'city_mpg': 23, 'class': 'compact car', 'combination_mpg': 26, 'cylinders': 4, 'displacement': 1.6, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 31, 'make': 'toyota', 'model': 'corolla', 'transmission': 'm', 'year': 1993}, {'city_mpg': 23, 'class': 'compact car', 'combination_mpg': 25, 'cylinders': 4, 'displacement': 1.8, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 30, 'make': 'toyota', 'model': 'corolla', 'transmission': 'a', 'year': 1993}, {'city_mpg': 23, 'class': 'compact car', 'combination_mpg': 26, 'cylinders': 4, 'displacement': 1.8, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 30, 'make': 'toyota', 'model': 'corolla', 'transmission': 'm', 'year': 1993}, {'city_mpg': 18, 'class': 'midsize car', 'combination_mpg': 21, 'cylinders': 4, 'displacement': 2.2, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 26, 'make': 'toyota', 'model': 'camry', 'transmission': 'a', 'year': 1993}]}
 
-my_cars = {}
-for k,v in car_data1.items():
-    my_cars[k] = {}
-    for x in v:
-        print(x)
+# my_cars = {}
+# for k,v in car_data1.items():
+#     my_cars[k] = {}
+#     for x in v:
+#         print(x)
 
   
         
-            #           = { 
-            # 'fuel_type': x['fuel_type'],
-            # 'city_mpg':x['city_mpg'],
-            # 'hwy_mpg':x['hwy_mpg'],
-            # 'mpg': x['combination_mpg']
-print(my_cars)
+#             #           = { 
+#             # 'fuel_type': x['fuel_type'],
+#             # 'city_mpg':x['city_mpg'],
+#             # 'hwy_mpg':x['hwy_mpg'],
+#             # 'mpg': x['combination_mpg']
+# print(my_cars)
     #     } 
     #                 }
 
