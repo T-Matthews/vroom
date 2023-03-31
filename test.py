@@ -1,12 +1,25 @@
-import requests,os
+from os import environ
+from dotenv import load_dotenv
+load_dotenv()
+from uszipcode import SearchEngine
 
-from uszipcode import SearchEngine, SimpleZipcode
+
+import requests
+api_url = "https://www.gasbuddy.com/gaspricemap/county?lat=32.74&lng=-116.42&usa=true"
+response = requests.post(api_url)
+print(response.json())
+
+
+
 
 search=SearchEngine()
 def zip_to_city(x):
     search=SearchEngine()
     city = search.by_zipcode(x).major_city
     state=search.by_zipcode(x).state_abbr
+    lat=search.by_zipcode(x).lat
+    long=search.by_zipcode(x).lng
+    print(lat,long)
     if city and state:
         return city,state
     elif state:
@@ -20,11 +33,11 @@ def getprices(x):
     print(city,state)
     import http.client
     conn = http.client.HTTPSConnection("api.collectapi.com")
-    auth=os.environ.get('GAS_KEY')
+    auth=environ.get('GAS_KEY')
     print(auth)
     headers = {
         'content-type': "application/json",
-        'authorization': #GAS KEY HERE
+        'authorization': 'apikey 0ZGAucSJwyEbcy7OHPJDWK:76N7cEueI9vjhXtdOuAHc9'
         }
 
     conn.request("GET", f"/gasPrice/stateUsaPrice?state={state}", headers=headers)
@@ -39,7 +52,7 @@ def getprices(x):
         gasoline=float(str_data[-69:-64])
         success=True
     else:
-
+        print(str_data)
         str_data=str_data[:str_data.index('}')]
 
         diesel = float(str_data[-6:-1])
