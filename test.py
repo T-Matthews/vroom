@@ -5,68 +5,27 @@ from uszipcode import SearchEngine
 
 
 import requests
-api_url = "https://www.gasbuddy.com/gaspricemap/county?lat=32.74&lng=-116.42&usa=true"
-response = requests.post(api_url)
-print(response.json())
-
-
-
 
 search=SearchEngine()
 def zip_to_city(x):
     search=SearchEngine()
-    city = search.by_zipcode(x).major_city
-    state=search.by_zipcode(x).state_abbr
     lat=search.by_zipcode(x).lat
     long=search.by_zipcode(x).lng
     print(lat,long)
-    if city and state:
-        return city,state
-    elif state:
-        return state
-    else:
-        return 'None'
+    return lat,long
 
 
-def getprices(x):
-    city,state=zip_to_city(x)
-    print(city,state)
-    import http.client
-    conn = http.client.HTTPSConnection("api.collectapi.com")
-    auth=environ.get('GAS_KEY')
-    print(auth)
-    headers = {
-        'content-type': "application/json",
-        'authorization': 'apikey 0ZGAucSJwyEbcy7OHPJDWK:76N7cEueI9vjhXtdOuAHc9'
-        }
+def get_gas_price(x):
+    lat,long=zip_to_city(x)
+    print(lat,long)
+    api_url = f"https://www.gasbuddy.com/gaspricemap/county?lat={lat}&lng={long}&usa=true"
+    response = requests.post(api_url)
+    gas_price= response.json()[0]['Price']
+    print(gas_price)
+    return gas_price
 
-    conn.request("GET", f"/gasPrice/stateUsaPrice?state={state}", headers=headers)
-    res = conn.getresponse()
-    str_data = res.read().decode('utf-8')
-    success=False
-    if city in str_data:
-        str_data=str_data[34:str_data.index(city)]
-        diesel = float(str_data[-15:-10])
-        premium=float(str_data[-32:-27])
-        midgrade=float(str_data[-50:-45])
-        gasoline=float(str_data[-69:-64])
-        success=True
-    else:
-        print(str_data)
-        str_data=str_data[:str_data.index('}')]
 
-        diesel = float(str_data[-6:-1])
-        premium=float(str_data[-23:-18])
-        midgrade=float(str_data[-41:-36])
-        gasoline=float(str_data[-60:-55])
-
-    print(diesel)
-    print(premium)
-    print(midgrade,type(midgrade))
-    print(gasoline,type(gasoline))
-    return(success,gasoline,midgrade,premium,diesel)
-getprices(91962)
-
+get_gas_price(99203)
 
 # api_url = 'https://api.api-ninjas.com/v1/cars'
 # car_data = {}

@@ -1,7 +1,7 @@
 from app import app
 import requests
 import os
-from app.services import CarForm,initial
+from app.services import CarForm,initial,get_gas_price
 
 
 
@@ -16,6 +16,9 @@ def home():
     form=CarForm()
     if form.validate_on_submit():
         print('VALID')
+        zip_code=int(form.zip_code.data)
+        gas_price=get_gas_price(zip_code)
+        print(gas_price,"HERE")
         input_data={
                         'make' : form.make.data,
                         'model' : form.model.data,
@@ -24,12 +27,13 @@ def home():
                         'mpg' : form.mpg.data,
                         'annual_milage':form.annual_milage.data,
                         'zip_code':form.zip_code.data,
+                        'gas_price':gas_price
                     }
         for k,v in input_data.items():
             print(k,v)
     else:
         print('FAILED')      
-    
+        return render_template('index.html',form=form)
     return render_template('index.html',input_data=input_data,form=form)
 
 @app.route('/about')

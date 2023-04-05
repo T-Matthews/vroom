@@ -11,7 +11,7 @@ WheelSpend | Welcome
 
 {% block area11 %}
 
-    {% if msrp %}
+    {% if input_data.msrp %}
         <h1>Make: {{ make }}</h1>
         <h3>Model: {{ input_data.model }} </h3>
         <h3>MSRP: {{ input_data.msrp }} </h3>
@@ -23,6 +23,8 @@ WheelSpend | Welcome
         {% endif %}
         <h3>Annual Milage: {{ input_data.annual_milage }} </h3>
         <h3>ZIP Code: {{ input_data.zip_code }} </h3>
+        <h3>Average Regional Gas Cost: {{ input_data.gas_price }} </h3>
+
 
 
         <form method="POST">
