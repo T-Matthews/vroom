@@ -11,8 +11,8 @@ WheelSpend | Welcome
 
 {% block area11 %}
 
-    {% if input_data.msrp %}
-        <h1>Make: {{ make }}</h1>
+    {% if input_data %}
+        <h1>Make: {{ input_data.make }}</h1>
         <h3>Model: {{ input_data.model }} </h3>
         <h3>MSRP: {{ input_data.msrp }} </h3>
         <h3>Fuel Type: {{ input_data.fuel_type }} </h3>

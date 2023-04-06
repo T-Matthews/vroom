@@ -1,75 +1,70 @@
-from os import environ
 from dotenv import load_dotenv
 load_dotenv()
 from uszipcode import SearchEngine
+from statistics import mean
+import datetime
 
 
-import requests
 
-search=SearchEngine()
-def zip_to_city(x):
+import os,requests
+
+
+
+
+def get_prices(x):
+    # get lat long, state abbr from zip code
     search=SearchEngine()
     lat=search.by_zipcode(x).lat
     long=search.by_zipcode(x).lng
-    print(lat,long)
-    return lat,long
-
-
-def get_gas_price(x):
-    lat,long=zip_to_city(x)
-    print(lat,long)
+    state_abbr=search.by_zipcode(x).state_abbr
+    # make call to gasbuddy for regional average gas cost
     api_url = f"https://www.gasbuddy.com/gaspricemap/county?lat={lat}&lng={long}&usa=true"
     response = requests.post(api_url)
     gas_price= response.json()[0]['Price']
-    print(gas_price)
-    return gas_price
+    
+    #make call to EIA to get residential Electrical data
+    EIA_KEY=os.environ.get('EIA_KEY')
+    #Gathering historical data. Need to specify start date for collection
+    today = datetime.date.today()
+    #Specify umber of years of data collected
+    years_history = 2
+    #Gets date of start of data collection
+    history_start=str(today-datetime.timedelta(days=(365*years_history)))
+    
+
+    #API call returns all electricity rates since {years_history}. 
+    ele_API_url=f'https://api.eia.gov/v2/electricity/retail-sales/data?api_key={EIA_KEY}&data[]=price&facets[stateid][]={state_abbr}&facets[sectorid][]=RES&start={history_start}'
+    response=requests.get(ele_API_url).json()['response']['data']
+    most_recent=0
+    ele_price=0
+    for x in response:
+        #Turns date into a decimal, for easy numerical comparison
+        date=float(str(x['period'][:4])+'.'+str(x['period'][5:]))
+        #If a date is more recent than the previous, then it will reset the price and update the most recent date
+        if date>most_recent:
+            ele_price=x['price']
+            most_recent=date
+    return ele_price,gas_price
+
+    
+    # for x in response:
+    #     if x['stateid']==state_abbr:
+    #         ele_prices.add(x['price']) 
+    # ele_avg_price=mean(ele_prices)
+    # print(ele_avg_price,gas_price) 
 
 
-get_gas_price(99203)
 
-# api_url = 'https://api.api-ninjas.com/v1/cars'
-# car_data = {}
-# included_makes = ['toyota']
-# """
+get_prices(99203)
 
-# ,'honda','chevrolet','ford','mercedes_benz','jeep',
-#                 'bmw','porsche','subaru','nissan','cadillac','volkswagen',
-#                 'lexus','audi','ferrari','volvo','jaguar','gmc','buick',
-#                 'acura','bentley','dodge','hyundai','lincoln','mazda',
-#                 'land rover', 'tesla','ram_trucks','kia','chrysler',
-#                 'pontiac','infiniti','mitsubishi','oldsmobile','maserati',
-#                 'aston_martin','bugatti','fiat','mini','alfa_romeo','saab']
-# """
-# for x in included_makes:
-#     api_url = 'https://api.api-ninjas.com/v1/cars?make='+x
-#     new_data = requests.get(api_url, headers={'X-Api-Key': 'ilgqmSKRzBK90jvnTHceOg==vMoGd0XzjwCjSfDI'})
-#     if new_data.status_code==requests.codes.ok:
-#         #add exception for RAM Trucks
-#         if x == 'ram_trucks':  
-#             car_data['dodge'] = new_data.json()
-#         else:
-#             car_data[x]=new_data.json()
-#     else:
-#         print("issue with "+x)
-# print(car_data)
 
-#same as car Data
-# car_data1={'toyota': [{'city_mpg': 23, 'class': 'compact car', 'combination_mpg': 24, 'cylinders': 4, 'displacement': 1.6, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 26, 'make': 'toyota', 'model': 'corolla', 'transmission': 'a', 'year': 1993}, {'city_mpg': 23, 'class': 'compact car', 'combination_mpg': 26, 'cylinders': 4, 'displacement': 1.6, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 31, 'make': 'toyota', 'model': 'corolla', 'transmission': 'm', 'year': 1993}, {'city_mpg': 23, 'class': 'compact car', 'combination_mpg': 25, 'cylinders': 4, 'displacement': 1.8, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 30, 'make': 'toyota', 'model': 'corolla', 'transmission': 'a', 'year': 1993}, {'city_mpg': 23, 'class': 'compact car', 'combination_mpg': 26, 'cylinders': 4, 'displacement': 1.8, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 30, 'make': 'toyota', 'model': 'corolla', 'transmission': 'm', 'year': 1993}, {'city_mpg': 18, 'class': 'midsize car', 'combination_mpg': 21, 'cylinders': 4, 'displacement': 2.2, 'drive': 'fwd', 'fuel_type': 'gas', 'highway_mpg': 26, 'make': 'toyota', 'model': 'camry', 'transmission': 'a', 'year': 1993}]}
+# def get_gas_price(x):
+#     lat,long=zip_to_city(x)
+#     print(lat,long)
+#     api_url = f"https://www.gasbuddy.com/gaspricemap/county?lat={lat}&lng={long}&usa=true"
+#     response = requests.post(api_url)
+#     gas_price= response.json()[0]['Price']
+#     print(gas_price)
+#     return gas_price
 
-# my_cars = {}
-# for k,v in car_data1.items():
-#     my_cars[k] = {}
-#     for x in v:
-#         print(x)
-
-  
-        
-#             #           = { 
-#             # 'fuel_type': x['fuel_type'],
-#             # 'city_mpg':x['city_mpg'],
-#             # 'hwy_mpg':x['hwy_mpg'],
-#             # 'mpg': x['combination_mpg']
-# print(my_cars)
-    #     } 
-    #                 }
 
