@@ -16,13 +16,9 @@ class CarForm(FlaskForm):
     fuel_type = SelectField('Fuel Type',choices=fuel_type_list,validators=[DataRequired()])
     mpg = IntegerField("Vehicle MPG",validators = [DataRequired()])
     annual_milage=IntegerField("Annual Milage",validators = [DataRequired()])
-    zip_code = IntegerField("Annual Milage",validators = [DataRequired(),NumberRange(min=10000,max=99999,message="Invalid 5 digit Zip")])
     submit = SubmitField()
 
 initial = ['make','model','mpg','msrp','fuel_type','annual_milage','zip_code']
-
-
-
 
 
 def get_prices(x):
