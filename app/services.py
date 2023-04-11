@@ -9,24 +9,17 @@ import os,requests,datetime
 
 
 #Create the CarForm WTForms Template
-class CarForm(FlaskForm):
-    make = StringField("Vehicle Make")
-    model = StringField("Vehicle Model")
-    msrp = IntegerField('MSRP',validators=[DataRequired()])
-    fuel_type = SelectField('Fuel Type',choices=fuel_type_list,validators=[DataRequired()])
-    mpg = IntegerField("Vehicle MPG",validators = [DataRequired()])
-    annual_milage=IntegerField("Annual Milage",validators = [DataRequired()])
-    submit = SubmitField()
-
-initial = ['make','model','mpg','msrp','fuel_type','annual_milage','zip_code']
+class ZipForm(FlaskForm):
+    zipcode = IntegerField("Zipcode",validators = [DataRequired()])
+   
 
 
-def get_prices(x):
+def get_prices(zipcode):
     search=SearchEngine()
     # get lat long, state abbr from zip code
-    lat=search.by_zipcode(x).lat
-    long=search.by_zipcode(x).lng
-    state_abbr=search.by_zipcode(x).state_abbr
+    lat=search.by_zipcode(zipcode).lat
+    long=search.by_zipcode(zipcode).lng
+    state_abbr=search.by_zipcode(zipcode).state_abbr
     # make call to gasbuddy for regional average gas cost
     api_url = f"https://www.gasbuddy.com/gaspricemap/county?lat={lat}&lng={long}&usa=true"
     response = requests.post(api_url)

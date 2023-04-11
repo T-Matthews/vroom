@@ -9,22 +9,34 @@ WheelSpend API | Welcome
 <div>
 {% block about %}
 <div class="card1 item" style="width: 80rem;">
-    <img class="card-img-top" src="..." alt="Card image cap">
+    <img class="card-img-top" src="{{url_for('static',filename='carburant.png')}}" alt="Card image cap">
     <div class="card-body">
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      <p class="card-text">A simple API, used to provide backend services for a cost-of-vehicle-ownership application. Once the front end is built, I will include a link to it here. For now, see below use case.
+        JSON API endpoint located at "{this_url}/fuel_price/{5 digit zip}. Try out the sample version below."
+      </p>
     </div>
   </div>
   <br/>
 {% endblock about %}
 
 {% block area1 %}
-<form class="card2 item">
+<form method="post" class="card2 item">
     {{ form.hidden_tag() }}
     <div class="form-group">
-      <label for="ZipCode">Try it out!</label>
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="zip" placeholder="Enter 5 digit ZIP">
+      <label for="zipcode">Try it out!</label>
+       {{form.zipcode(class_="form-control",placeholder="5 Digit Zip",maxlength=5,size=32)}}
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
+
+    {% if price != None %}
+      <br><br>
+      <label for="gas">Gas Price: {{price.gasoline}} $/gal</label>
+      <br>
+      <label for="ele">Electric Price: {{price.electric}}  ¢/kWh</label>
+      <br>
+
+    {% endif %}
+
   </form>
 </div>
 

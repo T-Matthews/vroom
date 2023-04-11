@@ -1,47 +1,40 @@
 from app import app
-from app.services import CarForm,get_prices
+from app.services import ZipForm,get_prices
 
 
 
-from flask import render_template,jsonify,request
+from flask import render_template,jsonify,request,redirect,url_for
 
 
-
-@app.route('/',methods = ['POST', 'GET'])
-def home():
-    form=CarForm()
-    if form.validate_on_submit():
-        print('VALID')
-        zip_code=int(form.zip_code.data)
-        ele_price,gas_price=get_prices(zip_code)
-        print(gas_price,"HERE")
-        input_data={
-                        'make' : form.make.data,
-                        'model' : form.model.data,
-                        'msrp' : form.msrp.data,
-                        'fuel_type':form.fuel_type.data,
-                        'mpg' : form.mpg.data,
-                        'annual_milage':form.annual_milage.data,
-                        'zip_code':form.zip_code.data,
-                        'gas_price':gas_price,
-                        'ele_price':ele_price
-                    }
-        for k,v in input_data.items():
-            print(k,v)
-    else:
-        print('FAILED')      
-        return render_template('index.html',form=form)
-    return render_template('index.html',input_data=input_data,form=form)
-
-
-@app.route(f'/fuel_price',methods = ['POST', 'GET'])
-def fuel_price():
-       zip_code=request.args.get('zip')
-       ele_price,gas_price=get_prices(zip_code)
+@app.route(f'/fuel_price/<int:zipcode>',methods = ['POST', 'GET'])
+def fuel_price(zipcode):
+       
+       ele_price,gas_price=get_prices(zipcode)
        return jsonify({'electricity':{'cost':ele_price,
                                       'units':'cents/kWhr'},
                         'gasoline':{'price':gas_price,
                                     'units':'dollars/gallon'}})
+
+@app.route('/',methods = ['POST', 'GET'])
+def home():
+    curr_price=None
+    zipcode=None
+    form=ZipForm()
+    if form.validate_on_submit():
+        print('VALID')
+        zipcode=int(form.zipcode.data)
+        ele_price,gas_price=get_prices(zipcode)
+        curr_price={
+             'electric':ele_price,
+             'gasoline':gas_price
+        }
+        print(zipcode," : ZIP")
+    else:
+        print('FAILED')      
+    return render_template('index.html',form=form,price=curr_price)
+
+
+
 
 
     
